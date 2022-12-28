@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public GameObject BestScoreText;
+
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -36,6 +39,14 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        if (GameManager.Instance.scoreColection.PlayerName.Count > 0)
+        {
+            string playerName = GameManager.Instance.scoreColection.PlayerName[GameManager.Instance.scoreColection.bestScoreIndex];
+            int bestScore = GameManager.Instance.scoreColection.Scores[GameManager.Instance.scoreColection.bestScoreIndex];
+            BestScoreText.GetComponent<TextMeshProUGUI>().text = $"Best Score : {playerName} : {bestScore}";
+        }
+
     }
 
     private void Update()
@@ -72,5 +83,10 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        GameManager.Instance.ScoreCalculator(m_Points);
+        string playerName = GameManager.Instance.scoreColection.PlayerName[GameManager.Instance.scoreColection.bestScoreIndex];
+        int bestScore = GameManager.Instance.scoreColection.Scores[GameManager.Instance.scoreColection.bestScoreIndex];
+        BestScoreText.GetComponent<TextMeshProUGUI>().text = $"Best Score : {playerName} : {bestScore}";
     }
 }
